@@ -31,7 +31,6 @@ const nextConfig = {
   // Performance optimizations
   poweredByHeader: false,
   reactStrictMode: true,
-  swcMinify: true,
   
   // Output configuration for better caching
   output: 'standalone',

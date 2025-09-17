@@ -16,8 +16,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "AI Voice Agent",
-  description: "AI Voice Agent Application",
+  title: "AiHire - AI-Powered Interview Platform",
+  description: "Intelligent interview platform that automates candidate assessment using advanced AI technology",
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -1,0 +1,16 @@
+{
+  "name": "AiHire - AI-Powered Interview Platform",
+  "short_name": "AiHire",
+  "description": "Intelligent interview platform that automates candidate assessment using advanced AI technology",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

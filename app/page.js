@@ -25,7 +25,7 @@ export default function Home() {
       <div className="text-center">
         <Loader2Icon className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
         <p className="text-gray-600">
-          {isLoading ? 'Checking authentication...' : user ? 'Redirecting to Dashboard...' : 'Redirecting to Login...'}
+          {user ? 'Redirecting to Dashboard...' : 'Redirecting to Login...'}
         </p>
       </div>
     </div>

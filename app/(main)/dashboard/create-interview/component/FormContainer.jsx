@@ -78,6 +78,18 @@ const FormContainer = ({onHandleInput  ,Gotonext}) => {
       </div>
 
       <div className='mt-5'>
+        <h2 className='text-sm font-medium text-gray-700 mb-2'>Candidate Name</h2>
+        <Input placeholder='e.g. John Doe' className='mt-2'
+        onChange={(event) =>onHandleInput('candidateName' , event.target.value) } />
+      </div>
+
+      <div className='mt-5'>
+        <h2 className='text-sm font-medium text-gray-700 mb-2'>Candidate Email</h2>
+        <Input placeholder='e.g. john.doe@example.com' type='email' className='mt-2'
+        onChange={(event) =>onHandleInput('candidateEmail' , event.target.value) } />
+      </div>
+
+      <div className='mt-5'>
         <h2 className='text-sm font-medium text-gray-700 mb-2'>Job Description</h2>
         <Textarea placeholder='Enter detailed job description...'
          className='mt-2 h-[200px]'

@@ -21,35 +21,14 @@ const InterviewDetails = () => {
      const GetInterviewDetails = async () => {
         try {
             setLoading(true);
+        const result = await supabase.from('Interviews')
+            .select(`jobPosition,jobDescription, type, duration,interview_id,questionList,created_at,
+            interview-feedback(userEmail ,username,feedback,created_at)`)
+        .eq('userEmail', user?.email)
+            .eq('interview_id', interview_id)
             
-            // First get the interview details
-            const interviewResult = await supabase.from('Interviews')
-                .select(`jobPosition,jobDescription, type, duration,interview_id,questionList,created_at`)
-                .eq('userEmail', user?.email)
-                .eq('interview_id', interview_id)
-                .single();
-            
-            if (interviewResult.data) {
-                console.log('📊 Interview details loaded:', interviewResult.data);
-                
-                // Then get feedback separately
-                const feedbackResult = await supabase.from('interview-feedback')
-                    .select('userEmail, username, feedback, created_at')
-                    .eq('interview_id', interview_id);
-                
-                console.log('👥 Feedback query result:', feedbackResult);
-                
-                // Combine the data
-                const combinedData = {
-                    ...interviewResult.data,
-                    'interview-feedback': feedbackResult.data || []
-                };
-                
-                setInterviewDetails(combinedData);
-                console.log('✅ Combined data:', combinedData);
-                console.log('👥 Final feedback count:', combinedData['interview-feedback']?.length || 0);
-            } else {
-                console.log('❌ No interview found for ID:', interview_id);
+            if (result.data && result.data.length > 0) {
+                setInterviewDetails(result.data[0]);
             }
         } catch (error) {
             console.error('Error fetching interview details:', error);

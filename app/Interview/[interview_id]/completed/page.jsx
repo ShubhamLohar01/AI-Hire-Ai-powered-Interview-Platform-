@@ -39,7 +39,7 @@ const InterviewCompleted = () => {
             Interview Successfully Completed!
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            You've successfully completed your AI-powered interview! Your responses have been recorded and our AI has generated comprehensive feedback for the hiring team.
+            You&apos;ve successfully completed your AI-powered interview! Your responses have been recorded and our AI has generated comprehensive feedback for the hiring team.
           </p>
         </div>
 
@@ -97,7 +97,7 @@ const InterviewCompleted = () => {
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">Follow Up</h4>
-              <p className="text-gray-600 text-sm">You'll hear back from the team within 2-3 business days</p>
+              <p className="text-gray-600 text-sm">You&apos;ll hear back from the team within 2-3 business days</p>
             </div>
           </div>
         </div>

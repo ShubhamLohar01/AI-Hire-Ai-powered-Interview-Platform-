@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { AppSidebar } from './components/AppsideBar'
+import { AppSidebar } from './components/AppSidebar'
 import WelcomeUser from './components/WelcomeUser'
 
 const DashboardProvider = ({children}) => {

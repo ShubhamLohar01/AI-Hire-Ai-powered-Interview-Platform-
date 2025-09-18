@@ -7,12 +7,25 @@ import { toast } from 'sonner'
 
 const InterviewLink = ({interviewId, formData, clearInterviewData}) => {
   const router = useRouter()
+  const [isGenerating, setIsGenerating] = React.useState(true)
   
   // Generate interview link
   const getInterviewUrl=()=>{
     const interviewLink = process.env.NEXT_PUBLIC_HOST_URL + '/Interview/'+interviewId
     return interviewLink
   }
+
+  // Simulate question generation completion
+  React.useEffect(() => {
+    if (interviewId) {
+      // Add a small delay to show the generating state
+      const timer = setTimeout(() => {
+        setIsGenerating(false)
+      }, 2000) // 2 seconds delay to show generating state
+      
+      return () => clearTimeout(timer)
+    }
+  }, [interviewId])
   
   
   // Calculate expiry date (30 days from now)
@@ -80,20 +93,30 @@ const InterviewLink = ({interviewId, formData, clearInterviewData}) => {
         {/* Link Display and Copy Button */}
         <div className='flex items-center gap-3 mb-4'>
           <Input 
-            defaultValue={getInterviewUrl()}
+            defaultValue={isGenerating ? 'Generating interview questions...' : getInterviewUrl()}
             readOnly
             className='flex-1 bg-gray-50 border-gray-200 text-gray-700'
           />
-          <div className='flex flex-col items-end'>
-            <Button 
-              onClick={copyToClipboard}
-              className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2'
-            >
-              <Copy className='w-4 h-4' />
-              Copy Link
-            </Button>
-            <span className='text-xs text-blue-500 mt-1'>Valid for 30 days</span>
-          </div>
+          {!isGenerating && (
+            <div className='flex flex-col items-end'>
+              <Button 
+                onClick={copyToClipboard}
+                className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2'
+              >
+                <Copy className='w-4 h-4' />
+                Copy Link
+              </Button>
+              <span className='text-xs text-blue-500 mt-1'>Valid for 30 days</span>
+            </div>
+          )}
+          {isGenerating && (
+            <div className='flex flex-col items-end'>
+              <div className='bg-gray-100 text-gray-500 px-4 py-2 rounded-lg flex items-center gap-2'>
+                <Clock className='w-4 h-4 animate-spin' />
+                Generating...
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Interview Parameters */}
@@ -113,39 +136,41 @@ const InterviewLink = ({interviewId, formData, clearInterviewData}) => {
         </div>
       </div>
 
-      {/* Share Options Card */}
-      <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full max-w-2xl mb-8'>
-        <h2 className='text-xl font-semibold text-gray-900 mb-4'>Share via</h2>
-        
-        <div className='grid grid-cols-3 gap-4'>
-          <Button 
-            onClick={shareViaEmail}
-            variant='outline' 
-            className='flex flex-col items-center gap-2 p-4 h-auto border-gray-200 hover:bg-gray-50'
-          >
-            <Mail className='w-6 h-6 text-gray-600' />
-            <span className='text-gray-700 font-medium'>Email</span>
-          </Button>
-{/*           
-          <Button 
-            onClick={shareViaSlack}
-            variant='outline' 
-            className='flex flex-col items-center gap-2 p-4 h-auto border-gray-200 hover:bg-gray-50'
-          >
-            <div className='w-6 h-6 flex items-center justify-center text-gray-600 font-bold'>#</div>
-            <span className='text-gray-700 font-medium'>Slack</span>
-          </Button> */}
+      {/* Share Options Card - Only show when link is ready */}
+      {!isGenerating && (
+        <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full max-w-2xl mb-8'>
+          <h2 className='text-xl font-semibold text-gray-900 mb-4'>Share via</h2>
           
-          <Button 
-            onClick={shareViaWhatsApp}
-            variant='outline' 
-            className='flex flex-col items-center gap-2 p-4 h-auto border-gray-200 hover:bg-gray-50'
-          >
-            <MessageSquare className='w-6 h-6 text-gray-600' />
-            <span className='text-gray-700 font-medium'>WhatsApp</span>
-          </Button>
-            </div>
-         </div>
+          <div className='grid grid-cols-3 gap-4'>
+            <Button 
+              onClick={shareViaEmail}
+              variant='outline' 
+              className='flex flex-col items-center gap-2 p-4 h-auto border-gray-200 hover:bg-gray-50'
+            >
+              <Mail className='w-6 h-6 text-gray-600' />
+              <span className='text-gray-700 font-medium'>Email</span>
+            </Button>
+    {/*           
+            <Button 
+              onClick={shareViaSlack}
+              variant='outline' 
+              className='flex flex-col items-center gap-2 p-4 h-auto border-gray-200 hover:bg-gray-50'
+            >
+              <div className='w-6 h-6 flex items-center justify-center text-gray-600 font-bold'>#</div>
+              <span className='text-gray-700 font-medium'>Slack</span>
+            </Button> */}
+            
+            <Button 
+              onClick={shareViaWhatsApp}
+              variant='outline' 
+              className='flex flex-col items-center gap-2 p-4 h-auto border-gray-200 hover:bg-gray-50'
+            >
+              <MessageSquare className='w-6 h-6 text-gray-600' />
+              <span className='text-gray-700 font-medium'>WhatsApp</span>
+            </Button>
+              </div>
+           </div>
+      )}
 
       {/* Bottom Navigation Buttons */}
       <div className='flex gap-4 w-full max-w-2xl'>

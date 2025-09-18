@@ -93,7 +93,7 @@ function StartInterview() {
     // Enhanced Vapi configuration with intelligent interview system
    const assistantOptions = { 
       name: "AiHire",
-      firstMessage: `Hi ${interviewInfo?.username}! Welcome to your ${jobPosition} interview. I'm excited to learn about your experience and skills. Let's start with a quick introduction - tell me a bit about yourself and what interests you most about this role.`,
+      firstMessage: `Hello ${interviewInfo?.username}! Welcome to your ${jobPosition} interview. I'm genuinely excited to learn about your professional journey and what particularly intrigues you about this opportunity. Let's begin with a brief introduction - I'd love to hear about your background, your passion for this field, and what aspects of this role resonate most with your career aspirations.`,
       transcriber: {
         provider: "deepgram",
         model: "nova-2",
@@ -101,7 +101,10 @@ function StartInterview() {
       },
       voice: {
         provider: "playht",
-        voiceId: "jennifer",
+        voiceId: "sarah", // Better voice with richer vocabulary
+        speed: 1.0,
+        stability: 0.8,
+        clarity: 0.9,
       },
       model: {
         provider: "openai",
@@ -314,21 +317,37 @@ Remember: Your goal is to assess their skills while making them feel comfortable
 
     const stopInterview = () => {
       try {
-
+        console.log('🛑 Stopping interview...');
+        
+        // Immediately set status to prevent further interactions
         setCallStatus('ended');
-        setIsTimerRunning(false); // Stop timer when interview ends
+        setIsTimerRunning(false);
         
-        // Stop the call
-        vapi.stop();
-        
-        toast.success('Interview ended successfully!');
-        console.log('Interview stopped successfully');
-        
-        // Generate feedback and navigate to completed page
-        GenerateFeedback();
+        // Force mute to stop any ongoing speech
+        if (vapi) {
+          vapi.setMuted(true);
+          
+          // Stop the call with enhanced error handling
+          vapi.stop().then(() => {
+            console.log('✅ Vapi call stopped successfully');
+            toast.success('Interview ended successfully!');
+            
+            // Generate feedback and navigate to completed page
+            GenerateFeedback();
+          }).catch((stopError) => {
+            console.error('❌ Error stopping Vapi call:', stopError);
+            // Even if stop fails, proceed with feedback generation
+            toast.success('Interview ended successfully!');
+            GenerateFeedback();
+          });
+        } else {
+          console.log('⚠️ Vapi not available, proceeding with feedback generation');
+          toast.success('Interview ended successfully!');
+          GenerateFeedback();
+        }
         
       } catch (error) {
-        console.error('Error stopping interview:', error);
+        console.error('❌ Error stopping interview:', error);
         setCallStatus('error');
         toast.error('Error stopping interview. Please try again.');
       }

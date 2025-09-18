@@ -97,17 +97,17 @@ const FormContainer = ({onHandleInput  ,Gotonext}) => {
       </div>
 
       <div className='mt-5'>
-        <h2 className='text-sm font-medium text-gray-700 mb-2'>Interview Duration</h2>
+        <h2 className='text-sm font-medium bg-white text-gray-700 mb-2'>Interview Duration</h2>
         <Select  onValueChange={(value)=>onHandleInput('duration' , value)}  defaultValue="">
-          <SelectTrigger className="w-full mt-2">
+          <SelectTrigger className="w-full mt-2 bg-white border border-gray-300">
             <SelectValue placeholder="Select Duration" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="5">5 min</SelectItem>
-            <SelectItem value="15">15 min</SelectItem>
-            <SelectItem value="30">30 min</SelectItem>
-            <SelectItem value="45">45 min</SelectItem>
-            <SelectItem value="60">60 min</SelectItem>
+          <SelectContent className="bg-white border border-gray-300">
+            
+            <SelectItem value="15" className="bg-white hover:bg-gray-50">15 min</SelectItem>
+            <SelectItem value="30" className="bg-white hover:bg-gray-50">30 min</SelectItem>
+            <SelectItem value="45" className="bg-white hover:bg-gray-50">45 min</SelectItem>
+            
           </SelectContent>
         </Select>
       </div>

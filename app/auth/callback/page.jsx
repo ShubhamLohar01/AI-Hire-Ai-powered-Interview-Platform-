@@ -1,14 +1,27 @@
 "use client"
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 
 export default function AuthCallback() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const [isClient, setIsClient] = useState(false)
+  const [redirectUrl, setRedirectUrl] = useState('/dashboard')
 
   useEffect(() => {
+    setIsClient(true)
+    const redirect = searchParams.get('redirect')
+    if (redirect) {
+      setRedirectUrl(redirect)
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    if (!isClient) return
+    
     const handleAuthCallback = async () => {
       try {
         const { data, error } = await supabase.auth.getSession()
@@ -22,10 +35,10 @@ export default function AuthCallback() {
 
         if (data.session && data.session.user) {
           // ✅ User is authenticated via Google OAuth
-          console.log('Google OAuth successful, redirecting to dashboard...')
+          console.log('Google OAuth successful, redirecting to:', redirectUrl)
           
-          // Just redirect - let the provider handle user creation and session
-          router.push('/dashboard')
+          // Redirect to the original URL or dashboard
+          router.push(redirectUrl)
         } else {
           // No session, redirect back to login
           console.log('No session found in callback')
@@ -39,7 +52,7 @@ export default function AuthCallback() {
     }
 
     handleAuthCallback()
-  }, [router])
+  }, [router, redirectUrl, isClient])
 
   return (
     <div className="flex items-center justify-center h-screen">

@@ -52,3 +52,4 @@ If you need serverless functions, create `netlify/functions/` directory.
 - Check build logs in Netlify dashboard
 - Ensure all dependencies are in package.json
 - Verify environment variables are correct
+

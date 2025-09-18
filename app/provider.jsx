@@ -10,19 +10,27 @@ import { useRouter, usePathname } from 'next/navigation';
 function Provider({children}) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
   // 🔒 Public routes that don't require authentication
   const publicRoutes = ['/auth/login', '/auth/signup'];
-  const isPublicRoute = publicRoutes.includes(pathname);
+  const isInterviewRoute = pathname.startsWith('/Interview/');
+  const isPublicRoute = publicRoutes.includes(pathname) || isInterviewRoute;
 
   useEffect(() => {
-    checkAuth();
+    setIsClient(true);
+    // Add a small delay to ensure client is ready
+    setTimeout(() => {
+      checkAuth();
+    }, 100);
   }, []);
 
   const checkAuth = async () => {
     try {
+      console.log('🔍 Starting auth check...');
+      
       // Check if we have a valid session in localStorage (24-hour session)
       const sessionData = localStorage.getItem('user_session');
       
@@ -89,11 +97,13 @@ function Provider({children}) {
 
       if (userToSet) {
         // Save 24-hour session
-        const sessionData = {
-          user: userToSet,
-          expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
-        };
-        localStorage.setItem('user_session', JSON.stringify(sessionData));
+        if (isClient) {
+          const sessionData = {
+            user: userToSet,
+            expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+          };
+          localStorage.setItem('user_session', JSON.stringify(sessionData));
+        }
         
         setUser(userToSet);
         setIsLoading(false);
@@ -136,19 +146,30 @@ function Provider({children}) {
   };
 
   const handleNoAuth = () => {
-    localStorage.removeItem('user_session');
+    if (isClient) {
+      localStorage.removeItem('user_session');
+    }
     setUser(null);
     setIsLoading(false);
     
     if (!isPublicRoute) {
-      router.push('/auth/login');
+      // Preserve the current URL for redirect after login
+      if (isClient) {
+        const currentPath = window.location.pathname + window.location.search;
+        console.log('🔒 Redirecting to login with URL:', currentPath);
+        router.push(`/auth/login?redirect=${encodeURIComponent(currentPath)}`);
+      }
+    } else {
+      console.log('✅ Public route, no redirect needed');
     }
   };
 
   const logout = async () => {
     try {
       // Clear localStorage session
-      localStorage.removeItem('user_session');
+      if (isClient) {
+        localStorage.removeItem('user_session');
+      }
       
       // Sign out from Supabase
       await supabase.auth.signOut();
@@ -166,12 +187,12 @@ function Provider({children}) {
     }
   };
 
-  // Show loading
-  if (isLoading) {
+  // Show loading during hydration or auth check
+  if (!isClient || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>

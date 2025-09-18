@@ -109,7 +109,7 @@ const WelcomeUser = () => {
   }
 
   return (
-    <div className= "grid  bg-white border-b border-gray-200 px-6 py-4">
+    <div className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
@@ -122,8 +122,7 @@ const WelcomeUser = () => {
           <div className="flex items-center gap-2">
             <Coins className="h-5 w-5 text-gray-600" />
             <span className="text-sm font-semibold text-gray-700">
-              Interview Credits left  :_
-              {user?.credits || 0}
+              Interview Credits left: {user?.credits || 0}
             </span>
           </div>
           
@@ -140,7 +139,7 @@ const WelcomeUser = () => {
               </Button>
             </DropdownMenuTrigger>
             
-            <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuContent align="end" className="w-64 bg-white border shadow-lg">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">{getUserDisplayName()}</p>

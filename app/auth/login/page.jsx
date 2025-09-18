@@ -1,21 +1,34 @@
 "use client"
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
 const LoginPage = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const [isClient, setIsClient] = useState(false)
+  const [redirectUrl, setRedirectUrl] = useState('/dashboard')
+
+  useEffect(() => {
+    setIsClient(true)
+    const redirect = searchParams.get('redirect')
+    if (redirect) {
+      setRedirectUrl(redirect)
+    }
+  }, [searchParams])
 
   const handleGoogleLogin = async () => {
+    if (!isClient) return
+    
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectUrl)}`
         }
       })
 

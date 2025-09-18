@@ -21,11 +21,7 @@ export const SidebarOptions = [
         icon: Users,
         path: '/all-interview',
     },
-    {
-        name: "Settings",
-        icon: Settings,
-        path: '/settings',
-    },
+   
 ]
 export const  QUESTIONS_PROMPT = `You are an expert technical interviewer.
 Based on the following inputs, generate a well-structured list of high-quality interview questions:

@@ -42,13 +42,9 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-    
-
+    <div className="min-h-full">
       {/* Main Content */}
       <div className="px-6 py-8">
-        {/* Dashboard Title */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h2>
 
         {/* Resume Interview Creation Banner */}
         {hasIncompleteInterview && (
